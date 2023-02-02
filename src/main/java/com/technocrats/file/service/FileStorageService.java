@@ -12,6 +12,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 @Service
@@ -32,7 +33,7 @@ public class FileStorageService implements IFileStorageService{
     @Override
     public void save(MultipartFile file) {
         try {
-            Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
+            Files.copy(file.getInputStream(), this.root.resolve(Objects.requireNonNull(file.getOriginalFilename())));
         } catch (Exception e) {
             if(e instanceof FileAlreadyExistsException)
                 throw new RuntimeException("A File with the Same Name Exists!!");

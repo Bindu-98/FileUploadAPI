@@ -9,7 +9,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
@@ -17,8 +16,9 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @CrossOrigin("http://localhost:8081")
+@RequestMapping("api/v1/file")
 public class FilesController {
 
     @Autowired
@@ -37,7 +37,7 @@ public class FilesController {
         }
     }
 
-    @GetMapping("/files")
+    @GetMapping("/get-all")
     public ResponseEntity<List<FileInfo>> getListFiles(){
         List<FileInfo> fileInfoList = fileStorageService.loadAll().map(path -> {
             String fileName = path.getFileName().toString();
@@ -50,7 +50,7 @@ public class FilesController {
         return ResponseEntity.status(HttpStatus.OK).body(fileInfoList);
     }
 
-    @GetMapping("/files/{filename:.+}")
+    @GetMapping("/get-file/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> getFile(@PathVariable String filename){
         Resource file = fileStorageService.load(filename);
